@@ -1,3 +1,5 @@
+
+
 (function() {
     'use strict';
 
@@ -5,17 +7,20 @@
         .module('erpApp')
         .factory('Run', Run);
 
-    User.$inject = ['$http', 'HOST_GW'];
+    Run.$inject = ['$http', 'HOST_GW'];
 
-    var service = {
-        getRun: getRun,
-    };
+    function Run ($http, HOST_GW) {
+        var service = {
+            getRun: getRun,
+        };
 
-    return service;
+        return service;
 
-    function getRun() {
-        return $http.get(HOST_GW + '/api/v1/run').then(function (response) {
-            return response;
-        });
+        function getRun() {
+            return $http.get(HOST_GW + '/api/v1/run').then(function (response) {
+                return response;
+            });
+        }
+
     }
 })();

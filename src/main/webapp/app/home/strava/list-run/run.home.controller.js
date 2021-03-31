@@ -1,10 +1,10 @@
 (function() {
     'use strict';
-    debugger
     angular.module('erpApp')
-        .controller('MovieHomeController', RunHomeController);
+        .controller('RunHomeController', RunHomeController);
 
-    RunHomeController.$inject = ['$scope'];
+    RunHomeController.$inject = ['$rootScope','$scope', '$state','$stateParams','$http','$timeout','apiData', 'Run',
+        'AlertService','$translate', 'variables', 'ErrorHandle', '$window','TableController'];
     function RunHomeController($rootScope,$scope, $state,$stateParams,$http,$timeout,apiData, Run,
                                AlertService,$translate, variables, ErrorHandle, $window,TableController){
 
@@ -25,7 +25,12 @@
             handleAfterReload: null,        //xu ly sau khi load du lieu
             handleAfterReloadParams: null,  //tham so cho xu ly sau khi load
             deleteCallback: null,           //delete callback
-            loading:false
+            loading:false,
+            customParams: null,               //dieu kien loc ban dau
+            pager_id: "table_uom_pager",   //phan trang
+            page_id: "uom_selectize_page", //phan trang
+            page_number_id: "uom_selectize_pageNum",   //phan trang
+            page_size_option: ["5", "10", "25", "50"]   //lua chon size cua 1 page
         };
 
         TableController.initTable($scope, tableConfig);     //khoi tao table

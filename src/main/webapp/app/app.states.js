@@ -181,5 +181,28 @@ erpApp
                     }]
                 }
             })
+                .state('list-strava', {
+                    url: '/list-strava',
+                    templateUrl: 'app/home/strava/list-run/run.home.html',
+                    controller: 'RunHomeController',
+                    controllerAs: 'vm',
+                    data: {
+                        pageTitle: 'admin.strava.run',
+                        sideBarMenu: 'inventory'
+                    },
+                    resolve: {
+                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                            return $ocLazyLoad.load([
+                                'lazy_ionRangeSlider',
+                                'lazy_tablesorter',
+                                'lazy_iCheck',
+                                'lazy_tree',
+                                'lazy_parsleyjs',
+                                'lazy_KendoUI',
+                                'app/home/strava/list-run/run.home.controller.js'
+                            ]);
+                        }]
+                    }
+                })
         }
     ]);
