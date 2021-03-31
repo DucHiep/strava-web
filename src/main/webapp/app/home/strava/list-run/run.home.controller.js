@@ -13,13 +13,13 @@
         var columns = {
             'name':'Text',
             'distance':'Number',
-            "pace":'Number',
+            "pace":'long',
             'date':'DateTime',
         };
 
         var tableConfig = {
-            tableId: "runs",               //table Id
-            model: "runs",                 //model
+            tableId: "running",               //table Id
+            model: "running",                 //model
             loadFunction: loadFunction,     //api load du lieu
             columns: columns,               //bao gom cac cot nao
             handleAfterReload: null,        //xu ly sau khi load du lieu
