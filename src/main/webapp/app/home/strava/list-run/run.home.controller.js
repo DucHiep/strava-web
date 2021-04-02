@@ -53,10 +53,7 @@
 
         $scope.loadData();
 
-        $scope.prop = 'runs';
-        $scope.sortBy = function(prop){
-            $scope.prop =prop;
-        }
+
         $scope.sortData = function (column) {
             if ($scope.sortColumn == column)
                 $scope.reverse = !$scope.reverse;

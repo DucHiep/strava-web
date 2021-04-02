@@ -5,6 +5,9 @@
         font-size: 50px;
         font-weight: bolder;
     }
+    tabe thead tr{
+        cursor:pointer ;
+    }
     table{
         border:1px solid black;
     }
@@ -20,7 +23,10 @@
         opacity: 100%;
     }
     .hoverTable {
+
         width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
     }
     .img-circle{
         border-radius: 50%;
@@ -46,34 +52,29 @@
                 </div>
             </div>
             <div >
-                <div >
-                    <div >
-                        <div >
-                            <table class="hoverTable">
-                                <thead>
-                                <tr>
-                                    <th style="background-color:skyblue" class="center">Họ và tên</th>
-                                    <th ng-click="sortData('distance')" style="background-color:skyblue"class="center">Đã chạy (m)<div ng-class="getSortClass('distance')"></div></th>
-                                    <th style="background-color:skyblue"class="center">Pace TB</th>
-                                    <th ng-click="sortData('runs')" style="background-color:skyblue"class="center">Runs<div ng-class="getSortClass('birthDate')"></div></th>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="run in running | orderBy:sortColumn:reverse">
-                                    <td>
-                                        <img ng-src="{{run.user.image}}" class="img-circle" alt="Cinque Terre" width="40" height="40" />
-                                        {{run.user.name}}
-                                    </td><center>
-                                    <td><center>{{run.distance}}</center></td>
-                                    <td><center>{{run.avgPace}}</center></td>
-                                    <td><center>{{run.runs}}</center></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <table class="hoverTable">
+                    <thead>
+                        <tr>
+                            <th style="background-color:skyblue" class="center">Họ và tên</th>
+                            <th ng-click="sortData('distance')" style="background-color:skyblue"class="center">Đã chạy (m)<div ng-class="getSortClass('distance')"></div></th>
+                            <th ng-click="sortData('avgPace')" style="background-color:skyblue"class="center">Pace TB<div ng-class="getSortClass('pace')"></div></th>
+                            <th ng-click="sortData('runs')" style="background-color:skyblue"class="center">Runs<div ng-class="getSortClass('runs')"></div></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="run in running |orderBy:'distance':true| orderBy:sortColumn:reverse">
+                            <td>
+                                <img ng-src="{{run.user.image}}" class="img-circle" alt="Cinque Terre" width="40" height="40" />
+                                {{run.user.name}}
+                            </td><center>
+                            <td><center>{{run.distance}}</center></td>
+                            <td><center>{{run.avgPace}}</center></td>
+                            <td><center>{{run.runs}}</center></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </form>
