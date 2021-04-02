@@ -6,4 +6,4 @@
         .constant('VERSION', "0.0.1-SNAPSHOT")
         .constant('DEBUG_INFO_ENABLED', true)
         .constant('BUILD_TIMESTAMP', "")
-        .constant('HOST_GW', "http://10.2.9.40:8080")})();
+        .constant('HOST_GW', "http://localhost:8080")})();

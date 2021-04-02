@@ -5,6 +5,15 @@
         font-size: 50px;
         font-weight: bolder;
     }
+    table{
+        border:1px solid black;
+    }
+    th{
+        border:1px solid black;
+    }
+    td{
+        border:1px solid black;
+    }
     body {
         background-image: url("assets/img/bg1.png");
         background-color: #cccccc;
@@ -26,30 +35,41 @@
             <a class="uk-text-primary ">STC RUNNING</a>
             <span></span>
         </span>
+            <div style="margin-top: 2px;">
+                <input  id="activeStartDatePicker" placeholder=" từ..." style="width: 30%;"/>
+            </div>
+            <div style="margin-top: 2px;">
+                <input id="activeEndDatePicker" placeholder="đến..." style="width: 30%;"/>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin="">
+                <div class="uk-width-small-1-1">
+                    <button id="searchBtn" ng-click="loadData()">Tìm kiếm</button>
+                </div>
+            </div>
             <div id="page_content_inner">
                 <jhi-alert></jhi-alert><modal-alert></modal-alert>
                 <div class="md-card">
                     <div class="md-card-content">
                         <div class="uk-overflow-container uk-margin-bottom table-height-fixed">
-                            <table class="hoverTable uk-table uk-table-align-vertical  uk-table-nowrap tablesorter tablesorter-altair table-fixed">
+                            <table class="hoverTable">
                                 <thead>
                                 <tr>
-                                    <th style="background-color:skyblue"><th-content table="TABLES['running']" label="'Họ và tên'"    column="'name'"></th-content></th>
-                                    <th style="background-color:skyblue"><th-content table="TABLES['running']" label="'Đã chạy(KM)'"  column="'distance'"></th-content></th>
-                                    <th style="background-color:skyblue"><th-content table="TABLES['running']" label="'Pace TB'"      column="'pace'"></th-content></th>
-                                    <th style="background-color:skyblue"><th-content table="TABLES['running']" label="'Ngày chạy'"    column="'date'"></th-content></th>
+                                    <th style="background-color:skyblue" class="center">Họ và tên</th>
+                                    <th ng-click="sortData('distance')" style="background-color:skyblue"class="center">Đã chạy (m)<div ng-class="getSortClass('distance')"></div></th>
+                                    <th style="background-color:skyblue"class="center">Pace TB</th>
+                                    <th ng-click="sortData('runs')" style="background-color:skyblue"class="center">Runs<div ng-class="getSortClass('birthDate')"></div></th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="run in running">
-                                    <td><center>
+                                <tr ng-repeat="run in running | orderBy:sortColumn:reverse">
+                                    <td>
                                         <img ng-src="{{run.user.image}}" class="img-circle" alt="Cinque Terre" width="40" height="40" />
-                                        {{run.user.name}}</center>
+                                        {{run.user.name}}
                                     </td><center>
                                     <td><center>{{run.distance}}</center></td>
-                                    <td><center>{{run.pace}}</center></td>
-                                    <td><center>{{run.date | date: 'dd-MM-yyyy HH:mm:ss'}}</center></td>
-
+                                    <td><center>{{run.avgPace}}</center></td>
+                                    <td><center>{{run.runs}}</center></td>
                                 </tr>
                                 </tbody>
                             </table>
