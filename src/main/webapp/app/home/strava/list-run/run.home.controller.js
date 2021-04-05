@@ -67,6 +67,7 @@
             }
             return '';
         }
+
         //khai bao cac column va kieu du lieu
         // var columns = {
         //     'fromDate': 'Date',
