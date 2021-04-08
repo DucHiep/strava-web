@@ -1,203 +1,103 @@
 (function() {
     'use strict';
+    angular.module('erpApp')
+        .controller('RunHomeController', RunHomeController);
 
-    angular
-        .module('erpApp')
-        .controller('LoginController', LoginController);
+    RunHomeController.$inject = ['$rootScope','$scope', '$state','$stateParams','$http','$timeout','apiData', 'Run',
+        'AlertService','$translate', 'variables', 'ErrorHandle', '$window','TableController', 'HOST_GW'];
+    function RunHomeController($rootScope,$scope, $state,$stateParams,$http,$timeout,apiData, Run,
+                               AlertService,$translate, variables, ErrorHandle, $window,TableController, HOST_GW){
 
-    LoginController.$inject = ['$rootScope', '$state', '$timeout', 'Auth','$scope','$http','AlertService','User','$translate','$window','JhiLanguageService', 'tmhDynamicLocale','HOST_GW'];
+        var loadFunction = Run.getStatistic ;
 
-    function LoginController ($rootScope, $state, $timeout, Auth, $scope, $http,AlertService,User,$translate,$window,JhiLanguageService, tmhDynamicLocale,HOST_GW) {
-        var vm = this;
+        $scope.fromDate = "2021-03-29";
+        $scope.toDate = "2021-12-30";
 
-        vm.authenticationError = false;
-        vm.credentials = {};
-        vm.login = login;
-        vm.forgotPassword = forgotPassword;
-        vm.password = null;
-        vm.rememberMe = true;
-        vm.email = null;
-        vm.emailForgotPass = null;
-        
-        var $formValidate = $('#form_login');
-        $formValidate.parsley({
-            'excluded': 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], .selectize-input > input'
-        }).on('form:validated',function() {
-            $scope.$apply();
-        }).on('field:validated',function(parsleyField) {
-            if($(parsleyField.$element).hasClass('md-input')) {
-                $scope.$apply();
-            }
-        });
-        
-        var $formForgotPassValidate = $('#form_forgotPass');
-        $formForgotPassValidate.parsley({
-            'excluded': 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], .selectize-input > input'
-        }).on('form:validated',function() {
-            $scope.$apply();
-        }).on('field:validated',function(parsleyField) {
-            if($(parsleyField.$element).hasClass('md-input')) {
-                $scope.$apply();
-            }
-        });
-        
-        //language switcher
-        if($window.localStorage.getItem("lang") !=null){
-            $scope.langSwitcherModel = $window.localStorage.getItem("lang");
-        } else {
-            $scope.langSwitcherModel = 'vn';
-        }
-        $scope.langSwitcherOptions = [
-            {id: 2, title: 'Tiếng Việt', value: 'vn'},
-            {id: 1, title: 'English', value: 'gb'}
-
-        ];
-
-        $scope.langSwitcherConfig = {
-            maxItems: 1,
-            render: {
-                option: function(langData, escape) {
-                    return  '<div class="option">' +
-                        '<i class="item-icon flag-' + escape(langData.value).toUpperCase() + '"></i>' +
-                        '<span>' + escape(langData.title) + '</span>' +
-                        '</div>';
-                },
-                item: function(langData, escape) {
-                    return '<div class="item">' +
-                    			'<i class="item-icon flag-' + escape(langData.value).toUpperCase() + '"></i>' +
-                    			'<span> ' + escape(langData.title) + '</span>' +
-                    		'</div>';
+        $("#activeStartDatePicker").kendoDatePicker({
+            format: "yyyy-MM-dd",
+            change: function() {
+                var value = this.value();
+                if(value !=null){
+                    $scope.fromDate = value.getTime();
+                } else {
+                    $scope.fromDate = null;
                 }
-            },
-            valueField: 'value',
-            labelField: 'title',
-            searchField: 'title',
-            create: false,
-            onInitialize: function(selectize) {
-                $('#lang_switcher').next().children('.selectize-input').find('input').attr('readonly',true);
-            },
-            onChange: function(value) {
-                var langKey = value==='gb' ? 'en' : (value==='vn'? 'vi' : 'en');
-                $translate.use(langKey);
-                tmhDynamicLocale.set(langKey);
-                $window.localStorage.setItem("lang",value);
             }
-        };
-        $scope.$watch('langSwitcherModel', function() {
-            var value = $scope.langSwitcherModel;
-            var langKey = value==='gb' ? 'en' : (value==='vn'? 'vi' : 'en');
-            $translate.use(langKey);
-            tmhDynamicLocale.set(langKey);
+        });
+        $("#activeEndDatePicker").kendoDatePicker({
+            format: "yyyy-MM-dd",
+            change: function() {
+                var value = this.value();
+                if(value !=null){
+                    $scope.toDate = value.getTime()
+
+                } else {
+                    $scope.toDate = null;
+                }
+            }
         });
 
+        function convertDate(inputLong) {
+            var date = new Date(inputLong);
+            return date.getFullYear() + "-" +
+                ((date.getMonth() + 1)<10 ? '0': '') +(date.getMonth()+1)
+                + "-" + ((date.getDate())<10 ? '0': '') +date.getDate();
+        }
 
-
-
-        $timeout(function (){angular.element('#email').focus();});
-
-        $scope.logining = false;
-        function login (event) {
-            $scope.logining = true;
-            event.preventDefault();
-            Auth.login({
-                email: vm.email,
-                password: vm.password,
-                rememberMe: vm.rememberMe,
-                type:0
-            }).then(function () {
-                vm.authenticationError = false;
-                User.current().then(function (user) {
-                    $rootScope.currentUser = user;
-                    if(user.domain){
-                        var url =window.location.href;
-                        if(!url.includes(user.domain)){
-                            $scope.redirectLink = user.domain;
-                            if (Auth.getPreviousState()) {
-                                var previousState = Auth.getPreviousState();
-                                Auth.resetPreviousState();
-                                $scope.redirectLink += "/#/" + previousState.name;
-                                if(previousState.params){
-                                    $scope.redirectLink +="?";
-                                    var index = 0;
-                                    for(var param in previousState.params){
-                                        $scope.redirectLink +=param +"=" +  previousState.params[param];
-                                        if(index < previousState.params.length -1){
-                                            $scope.redirectLink +="&";
-                                        }
-                                    }
-                                }
-                            }
-                            window.location = $scope.redirectLink
-                        } else {
-                            if (Auth.getPreviousState()) {
-                                var previousState = Auth.getPreviousState();
-                                Auth.resetPreviousState();
-                                $state.go(previousState.name, previousState.params);
-                            } else {
-                                $state.go('dashboard', {from: 'login'});
-                            }
-                        }
-                    } else {
-                        if (Auth.getPreviousState()) {
-                            var previousState = Auth.getPreviousState();
-                            Auth.resetPreviousState();
-                            $state.go(previousState.name, previousState.params);
-                        } else {
-                            $state.go('dashboard', {from: 'login'});
-                        }
-                    }
-                })
-                // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-                // since login is successful, go to stored previousState and clear previousState
-            }).catch(function (error) {
-                $scope.logining = false;
-                vm.authenticationError = true;
-                $scope.messageError = error.data.message;
+        $scope.loadData = function (){
+            $http.get(HOST_GW + '/api/v1/statistic?fromDate='+convertDate($scope.fromDate)
+                +"&toDate="+convertDate($scope.toDate)).then(function (response) {
+                $scope.running = response.data;
             });
         }
-        $scope.sendMail = false;
-        $scope.failed = false;
-        function forgotPassword() {
-        	var params = {};
-        	params.email = vm.emailForgotPass;
-        	params.username=vm.emailForgotPass;
-        	params.langKey = $scope.langSwitcherModel==='gb' ? 'en' : 'vn';
-        	User.forgotPassword(params).then(function (response) {
-        		if ($scope.blockModal != null) $scope.blockModal.hide();
-                AlertService.success('global.success.sendEmailForgotPass');
-                $scope.checkEmail = false;
-                $scope.sendMail = true;
-            }).catch(function (error) {
-            	if ($scope.blockModal != null) $scope.blockModal.hide();
-            	AlertService.error(error.data.message);
-                $scope.messageError = error.data.message;
-                $scope.checkEmail = true;
-                $scope.failed = true;
-            })
+
+        $scope.loadData();
+
+
+        $scope.sortData = function (column) {
+            if ($scope.sortColumn == column)
+                $scope.reverse = !$scope.reverse;
+            else
+                $scope.reverse = false;
+            $scope.sortColumn = column;
+        }
+        $scope.getSortClass = function (column) {
+            if ($scope.sortColumn == column) {
+                return $scope.reverse ? 'arrow-up' : 'arrow-down';
+            }
+            return '';
         }
 
-        $scope.emailForgotChange = function(){
-            $scope.checkEmail = false;
-            $scope.failed = false;
-        }
-        
-        $scope.onCacel = function(){
-            $scope.checkEmail = false;
-            $scope.failed = false;
-            vm.emailForgotPass = null;
-        }
-        
-        $scope.onClose = function(){
-            $scope.checkEmail = false;
-            $scope.failed = false;
-            vm.emailForgotPass = null;
-            $scope.sendMail = false;
-        }
+        //khai bao cac column va kieu du lieu
+        // var columns = {
+        //     'fromDate': 'Date',
+        //     'name':'Text',
+        //     'distance':'Number',
+        //     "pace":'long',
+        //     'date':'DateTime',
+        //     'runs':'long',
+        //     'toDate':'Date'
+        // };
+        //
+        // var tableConfig = {
+        //     tableId: "running",               //table Id
+        //     model: "running",                 //model
+        //     loadFunction: loadFunction,     //api load du lieu
+        //     columns: columns,               //bao gom cac cot nao
+        //     handleAfterReload: null,        //xu ly sau khi load du lieu
+        //     handleAfterReloadParams: null,  //tham so cho xu ly sau khi load
+        //     deleteCallback: null,           //delete callback
+        //     loading:false,
+        //     customParams: null,               //dieu kien loc ban dau
+        //     pager_id: "table_uom_pager",   //phan trang
+        //     page_id: "uom_selectize_page", //phan trang
+        //     page_number_id: "uom_selectize_pageNum",   //phan trang
+        //     page_size_option: ["5", "10", "25", "50"]   //lua chon size cua 1 page
+        // };
+        //
+        // TableController.initTable($scope, tableConfig);     //khoi tao table
+        // TableController.sortDefault(tableConfig.tableId);   //set gia tri sap xep mac dinh
+        // TableController.reloadPage(tableConfig.tableId);
 
-        if($window.localStorage.getItem("lang") ==null){
-            $translate.use('vn');
-            tmhDynamicLocale.set('vn');
-            $window.localStorage.setItem("lang",'vn');
-        }
     }
 })();

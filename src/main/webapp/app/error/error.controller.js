@@ -10,7 +10,7 @@ angular
         function ($timeout,$scope,$window,$state,Auth,$rootScope) {
             $scope.logout = function() {
                 Auth.logout();
-                $state.go('list-strava');
+                $state.go('login');
             }
         }
     ])

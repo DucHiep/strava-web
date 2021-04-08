@@ -59,25 +59,24 @@ erpApp
             // -- LOGIN PAGE --
                 .state("login", {
                     url: "/login",
-                    templateUrl: 'app/account/login.html',
-                    controller: 'LoginController',
-                    controllerAs:'vm',
+                    templateUrl: 'app/home/strava/list-run/run.home.html',
+                    controller: 'RunHomeController',
+                    controllerAs: 'vm',
                     data: {
-                        pageTitle: 'global.login'
+                        pageTitle: 'admin.strava.run',
+                        sideBarMenu: 'inventory'
                     },
                     resolve: {
-                        deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                             return $ocLazyLoad.load([
-                                'lazy_uikit',
+                                'lazy_ionRangeSlider',
+                                'lazy_tablesorter',
+                                'lazy_iCheck',
+                                'lazy_tree',
                                 'lazy_parsleyjs',
-                                //'lazy_iCheck',
-                                'lazy_selectizeJS',
-                                'app/account/login.controller.js'
+                                'lazy_KendoUI',
+                                'app/home/strava/list-run/run.home.controller.js'
                             ]);
-                        }],
-                        translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                            $translatePartialLoader.addPart('global');
-                            return $translate.refresh();
                         }]
                     }
                 })
