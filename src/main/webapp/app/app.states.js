@@ -63,7 +63,7 @@ erpApp
                     controller: 'RunHomeController',
                     controllerAs: 'vm',
                     data: {
-                        pageTitle: 'admin.strava.run',
+                        pageTitle: 'STC Running',
                         sideBarMenu: 'inventory'
                     },
                     resolve: {
@@ -186,7 +186,7 @@ erpApp
                     controller: 'RunHomeController',
                     controllerAs: 'vm',
                     data: {
-                        pageTitle: 'admin.strava.run',
+                        pageTitle: 'STC Running',
                         sideBarMenu: 'inventory'
                     },
                     resolve: {

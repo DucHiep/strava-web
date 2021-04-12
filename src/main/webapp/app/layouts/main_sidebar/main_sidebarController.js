@@ -99,7 +99,7 @@ angular
                     },
                     {
                         id: 15,
-                        title: 'admin.strava.run',
+                        title: 'STC Running',
                         icon: '&#xE7EF;',
                         link: 'list-strava',
                     },
