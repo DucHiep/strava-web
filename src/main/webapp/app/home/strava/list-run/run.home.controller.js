@@ -10,8 +10,8 @@
 
         var loadFunction = Run.getStatistic ;
 
-        $scope.fromDate = "2021-03-29";
-        $scope.toDate = "2021-12-30";
+        $scope.fromDate = "2022-04-22";
+        $scope.toDate = "2022-12-30";
 
         $("#activeStartDatePicker").kendoDatePicker({
             format: "yyyy-MM-dd",

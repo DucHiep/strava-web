@@ -59,7 +59,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="run in running |orderBy:['runs','distance','avgPace']:true">
+            <tr ng-repeat="run in running |orderBy:['totalPoint','runs','distance','avgPace']:true">
                 <td><center>{{$index+1}}</center></td>
                 <td>
                     <img ng-src="{{run.user.image}}" class="img-circle" alt="Cinque Terre" width="40" height="40" />
