@@ -1,3 +1,4 @@
+
 (function() {
     'use strict';
     angular.module('erpApp')
@@ -41,9 +42,11 @@
              var date = new Date(inputLong);
              return date.getFullYear() + "-" +
                  ((date.getMonth() + 1)<10 ? '0': '') +(date.getMonth()+1)
-                 + "-" + ((date.getDate())<10 ? '0': '') +date.getDate();
+                 + "-" + ((date.getDate())<10 ? '0': '') +date.getDate() + "T00:00:00";
          }
 
+        console.log(111)
+        console.log(111, convertDate($scope.fromDate))
         $scope.loadData = function (){
             $http.get(HOST_GW + '/api/v1/statistic?fromDate='+convertDate($scope.fromDate)
                 +"&toDate="+convertDate($scope.toDate)).then(function (response) {
